@@ -185,9 +185,12 @@ extension NSManagedObjectContext: Context {
     public func batchDelete(entityName: String, predicate: NSPredicate?) {
         let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
         fetch.predicate = predicate
-        let request = NSBatchDeleteRequest(fetchRequest: fetch)
-        
-        _ = try? self.execute(request)
+        if #available(iOS 9.0, *) {
+            let request = NSBatchDeleteRequest(fetchRequest: fetch)
+            _ = try? self.execute(request)
+        } else {
+            // Fallback on earlier versions
+        }
     }
 }
 
